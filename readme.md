@@ -1,8 +1,8 @@
-# API Testing Profissional
+# Projeto de Automação de Testes API - ReqRes
 
-Projeto de automação de testes de API desenvolvido com PactumJS e Mocha.
+Este projeto foi desenvolvido com foco em automação de testes de API utilizando Node.js, PactumJS e Chai.
 
-O objetivo do projeto é validar operações CRUD em APIs REST, aplicando boas práticas de automação e validação de respostas.
+O objetivo é validar operações CRUD em uma API REST, aplicando boas práticas de organização, reutilização e validação de testes automatizados.
 
 ---
 
@@ -10,45 +10,65 @@ O objetivo do projeto é validar operações CRUD em APIs REST, aplicando boas p
 
 - Node.js
 - PactumJS
+- Chai
 - Mocha
 
 ---
 
-# Cenários automatizados
+# Funcionalidades testadas
 
-## GET
-
-- Buscar lista de usuários
-- Validar usuário inexistente (404)
-
-## POST
-
-- Criar usuário
-- Validar resposta da criação
-
-## PUT
-
-- Atualizar usuário
-- Validar alteração de dados
-
-## DELETE
-
-- Deletar usuário
-- Validar status 204
-
-## Fluxo dinâmico
-
-- Criar usuário
-- Capturar ID dinamicamente
-- Atualizar usuário criado
-- Deletar usuário criado
+- Criar usuário (POST)
+- Atualizar usuário (PUT)
+- Buscar usuário (GET)
+- Deletar usuário (DELETE)
+- Validação de dados inválidos
 
 ---
 
 # Estrutura do projeto
 
 ```bash
-tests/
-├── users.test.js
-├── users.flow.test.js
+project/
+│
+├── config/
+├── data/
+├── helpers/
+├── tests/
+├── package.json
 ```
+
+---
+
+# Recursos aplicados
+
+- Helpers para reutilização de lógica
+- Payloads externos
+- Hooks (`beforeEach`)
+- Assertions com Chai
+- Configuração centralizada (`env.js`)
+- Fluxo encadeado utilizando ID dinâmico
+- Validação de status code e response body
+
+---
+
+# Como executar o projeto
+
+Instalar dependências:
+
+```bash
+npm install
+```
+
+Executar testes:
+
+```bash
+npm test
+```
+
+---
+
+# Observações
+
+A API utilizada no projeto é a ReqRes, uma API pública para fins de estudo e prática de testes automatizados.
+
+Alguns endpoints possuem comportamento mockado e limite diário de requisições.

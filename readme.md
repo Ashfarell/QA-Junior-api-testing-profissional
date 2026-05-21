@@ -72,3 +72,23 @@ npm test
 A API utilizada no projeto é a ReqRes, uma API pública para fins de estudo e prática de testes automatizados.
 
 Alguns endpoints possuem comportamento mockado e limite diário de requisições.
+
+## Integração Contínua (CI)
+
+O projeto utiliza GitHub Actions para execução automática dos testes.
+
+A pipeline executa automaticamente:
+
+- Instalação das dependências
+- Execução dos testes automatizados
+- Validação da build a cada push realizado na branch principal
+
+Estrutura do workflow:
+
+```bash id="z6m2qp"
+.github/workflows/api-tests.yml
+```
+
+Tecnologia utilizada:
+
+- GitHub Actions

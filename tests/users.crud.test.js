@@ -1,3 +1,4 @@
+// Crud test: Testes ISOLADOS
 const pactum = require('pactum');
 const BASE_URL = 'https://reqres.in/api'; //base URL da API
 const API_KEY = 'free_user_3DXxmtOsTFL2aSp9XbiHckHR58G'; //define headers padrão

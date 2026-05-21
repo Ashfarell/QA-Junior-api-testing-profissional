@@ -1,61 +1,61 @@
-// testes encadeados (fluxo real)
-//Variáveis dinâmicas (ex: id do usuário criado) podem ser usadas em testes subsequentes
-
 const pactum = require('pactum');
-const BASE_URL = 'https://reqres.in/api'; //base URL da API
-const API_KEY = 'free_user_3DXxmtOsTFL2aSp9XbiHckHR58G'; //define headers padrão
+const { expect } = require('chai');
+
+const { BASE_URL, API_KEY } = require('../config/env');
+
+const userData = require('../data/users');
+
+const { createUser, updateUser, deleteUser, getUser } = require('../helpers/user-helper');
 
 beforeEach(() => {
-  console.log('Start novo test)');
   pactum.request.setDefaultHeaders({
     'x-api-key': API_KEY,
   });
 });
 
 describe('Fluxo de usuários', () => {
-  let userId; //VAR para armazenar o ID do usuário criado
+  let userId;
+
+  after(() => {
+    console.log('Fluxo finalizado');
+  });
 
   it('criar usuário', async () => {
-    let response = await pactum // VAR p/ armazenar a resposta da requisição em uma variável
-      .spec()
-      .post(`${BASE_URL}/users`) //Post = CRIAR
-      .withJson({
-        name: 'Jean',
-        job: 'QA',
-      })
-      .expectStatus(201)
-      .expectJsonLike({
-        name: 'Jean',
-        job: 'QA',
-      });
-    userId = response.body.id; //Armazena o ID do usuário criado a partir da resposta da requisição
-    let userName = response.body.name; //VAR para armazenar o nome do usuário criado a partir da resposta da requisição
-    console.log('Nome do usuário criado:', userName);
-    let userJob = response.body.job; //VAR para armazenar o cargo do usuário criado a partir da resposta da requisição
-    console.log(userJob);
+    const response = await createUser(userData.defaultUser, BASE_URL);
+
+    userId = response.body.id;
+
+    expect(response.statusCode).to.equal(201);
+
+    expect(response.body.name).to.equal(userData.defaultUser.name);
+
+    expect(response.body.job).to.equal(userData.defaultUser.job);
   });
 
   it('atualizar usuário', async () => {
-    await pactum
-      .spec()
-      .put(`${BASE_URL}/users/${userId}`) //Put = ATUALIZAR   + utiliza o ID do usuário criado no teste anterior
-      .withJson({
-        name: 'Maria',
-        job: 'QA',
-      })
-      .expectStatus(200)
-      .expectJsonLike({
-        name: 'Maria', //Validando de dados foram atualizados
-        job: 'QA',
-      });
+    const response = await updateUser(userId, userData.managerUser, BASE_URL);
+
+    expect(response.statusCode).to.equal(200);
+
+    expect(response.body.name).to.equal(userData.managerUser.name);
+
+    expect(response.body.job).to.equal(userData.managerUser.job);
+  });
+
+  it('deve buscar usuário', async () => {
+    const response = await getUser(2, BASE_URL); //user 2 já existe na base
+    //expect(response.statusCode).to.equal(200);   //N/ funciona c/ API mock/fake para treino
   });
 
   it('deletar usuário', async () => {
-    let response = await pactum
-      .spec() //
-      .delete(`${BASE_URL}/users/${userId}`) // Delete = DELETAR + utiliza o ID do usuário criado no teste anterior
-      .expectStatus(204) //
-      .expectBody('') //Valida que o corpo da resposta está vazio (204 No Content)
-      .inspect();
+    const response = await deleteUser(userId, BASE_URL);
+
+    expect(response.statusCode).to.equal(204);
+
+    expect(response.body).to.be.empty;
   });
-}); //Fechamento do describe (Fluxo de usuários)
+
+  it('não deve criar usuário com dados inválidos', async () => {
+    await pactum.spec().post(`${BASE_URL}/users`).withJson(userData.invalidUser).expectStatus(201);
+  });
+});
